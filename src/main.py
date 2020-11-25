@@ -41,6 +41,10 @@ twitterKeys = {"CK": os.environ["TWITTER_API_CONKEY"],
 # MeCab
 mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 
+@app.route('/')
+def index():
+    return "Markov Twitter"
+
 # TLからツイートを学習して呟きます
 @scheduler.task('cron', id='tweet', minute='*/20')
 def tweet():
@@ -100,9 +104,6 @@ def tweet():
 
 
 if __name__ == "__main__":
-    port = 5000
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host = "0.0.0.0", port = port)
+    app.run(host = os.getenv('HOST', '0.0.0.0'), port = int(os.getenv('PORT', '5000')))

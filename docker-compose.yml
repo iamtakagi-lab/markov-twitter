@@ -1,11 +1,9 @@
 version: "3"
 services:
   markov-twitter:
-    build: src
+    build: .
     volumes:
       - ./chainfiles:/app/chainfiles
     environment:
       TZ: Asia/Tokyo
       PYTHONUNBUFFERED: "TRUE"
-    env_file:
-      - ./src/twitter.env

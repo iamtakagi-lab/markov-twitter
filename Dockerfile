@@ -13,6 +13,5 @@ WORKDIR /app
 COPY . .
 RUN pip3 install -r requirements.txt
 
-EXPOSE 5000
-ENTRYPOINT ["python"]
-CMD ["main.py"]
+ENTRYPOINT ["python3"]
+CMD ["src/main.py"]
