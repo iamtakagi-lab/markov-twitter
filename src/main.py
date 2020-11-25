@@ -48,7 +48,7 @@ def index():
 # TLからツイートを学習して呟きます
 @scheduler.task('cron', id='tweet', minute='*/20')
 def tweet():
-    global twitterKeys  
+    global twitterKeys, source  
     twt = TwitterTools(
         twitterKeys["CK"], twitterKeys["CS"], twitterKeys["AT"], twitterKeys["ATS"])
 
