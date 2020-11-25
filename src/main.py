@@ -42,9 +42,9 @@ twitterKeys = {"CK": os.environ["TWITTER_API_CONKEY"],
 mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 
 # TLからツイートを学習して呟きます
-@scheduler.task('interval', id='tweet', minutes=15, misfire_grace_time=900)
+@scheduler.task('cron', id='tweet', minute='*/20')
 def tweet():
-    global twitterKeys
+    global twitterKeys  
     twt = TwitterTools(
         twitterKeys["CK"], twitterKeys["CS"], twitterKeys["AT"], twitterKeys["ATS"])
 
@@ -61,10 +61,9 @@ def tweet():
     # 2. 文書生成
     if not os.path.isfile("./chainfiles/home_timeline.json"):
         return print('Learned model file not found. まずはじめにツイートを学習させてください。')
-    
+
     startWith = ""
     length = ""
-    
     try:
         with open("./chainfiles/home_timeline.json") as f:
             textModel = markovify.Text.from_json(f.read())
