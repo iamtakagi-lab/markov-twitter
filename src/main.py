@@ -46,7 +46,7 @@ def index():
     return "Markov Twitter"
 
 # TLからツイートを学習して呟きます
-@scheduler.task('cron', id='tweet', minute='*/20')
+@scheduler.task('cron', id='tweet', minute='*/30')
 def tweet():
     global twitterKeys, source  
     twt = TwitterTools(
