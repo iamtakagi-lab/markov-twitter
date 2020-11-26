@@ -28,9 +28,6 @@ import markovify
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-# Tweet Source
-source = os.environ["SOURCE"]
-
 # Twitter API Keys
 twitterKeys = {"CK": os.environ["TWITTER_API_CONKEY"],
                "CS": os.environ["TWITTER_API_CONSEC"],
@@ -48,7 +45,7 @@ def index():
 # TLからツイートを学習して呟きます
 @scheduler.task('cron', id='tweet', minute='*/30')
 def tweet():
-    global twitterKeys, source  
+    global twitterKeys
     twt = TwitterTools(
         twitterKeys["CK"], twitterKeys["CS"], twitterKeys["AT"], twitterKeys["ATS"])
 
@@ -91,8 +88,7 @@ def tweet():
                 
                 
                 params = {
-                    "status": sentence,
-                    "source": source
+                    "status": sentence
                 }
 
                 # 3. 呟く
