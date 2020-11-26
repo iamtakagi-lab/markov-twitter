@@ -29,7 +29,7 @@ class TwitterTools:
 
     def fetchTweetsLoop(self, params, loop):
         tweets = []
-        params["count"] = 200
+        params["count"] = 150
         params["include_rts"] = 1
         for i in range(loop):
             req = self.fetchTweets(params)
