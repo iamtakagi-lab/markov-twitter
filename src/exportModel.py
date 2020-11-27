@@ -45,6 +45,13 @@ def generateAndExport(src, dest, state_size = 3):
     data = [mecabW.parse(s) for s in src.split("\n") if s != ""]
     joinedData = "".join(data)
     modeljson = markovify.NewlineText(joinedData, state_size = state_size).to_json()
+
+    # Delete
+    f = open(dest, mode = 'r+')
+    f.truncate(0)
+    f.close()
+
+    # Write
     with open(dest, mode = "w") as f:
         f.write(modeljson)
     return len(data)
