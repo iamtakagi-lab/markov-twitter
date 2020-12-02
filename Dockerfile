@@ -8,6 +8,11 @@ RUN rm -rf ./mecab-ipadic-neologd
 RUN ln -s /var/lib/mecab/dic /usr/lib/mecab/dic
 
 ENV MECABRC='/etc/mecabrc'
+ENV TWITTER_API_CONKEY=""
+ENV TWITTER_API_CONSEC=""
+ENV TWITTER_API_ACCTOK=""
+ENV TWITTER_API_ACCSEC=""
+
 
 WORKDIR /app
 COPY . .

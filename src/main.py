@@ -42,8 +42,10 @@ mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 def index():
     return "Markov Twitter"
 
-# TLからツイートを学習して呟きます
-@scheduler.task('cron', id='tweet', minute='*/30')
+
+# TLからツイートを学習して呟きます (30分おき) 
+scheduler.task('cron', id='tweet', minute='*/30')
+# @scheduler.task('interval', id='tweet', seconds=30, misfire_grace_time=900) # DEBUG
 def tweet():
     global twitterKeys
     twt = TwitterTools(
@@ -85,7 +87,6 @@ def tweet():
                 sentence = textModel.make_sentence(tries=100)
             if sentence is not None:
                 sentence = "".join(sentence.split())
-                
                 
                 params = {
                     "status": sentence
