@@ -7,7 +7,8 @@ RUN cd ./mecab-ipadic-neologd && ./bin/install-mecab-ipadic-neologd -y -p /var/l
 RUN rm -rf ./mecab-ipadic-neologd
 RUN ln -s /var/lib/mecab/dic /usr/lib/mecab/dic
 
-ENV MECABRC='/etc/mecabrc'
+ENV MECABRC=""
+ENV SCREEN_NAME=""
 ENV TWITTER_API_CONKEY=""
 ENV TWITTER_API_CONSEC=""
 ENV TWITTER_API_ACCTOK=""
