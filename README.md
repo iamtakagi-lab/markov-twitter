@@ -1,5 +1,7 @@
 # markov-twitter
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Run `$ docker-compose build && docker-compose up`
 
 This program was forked from [tweet-generator](https://github.com/cordx56/tweet-generator)<br/>
