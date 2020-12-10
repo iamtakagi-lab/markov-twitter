@@ -7,7 +7,5 @@ This program uses [jsvine/markovify](https://github.com/jsvine/markovify) and [M
 To know all dependencies, see [requirements](requirements.txt) and [Dockerfile](Dockerfile).
 
 ## Running on
-
-https://twitter.com/learnshizue
-
-https://twitter.com/learnwaluigi
+- https://twitter.com/learnshizue
+- https://twitter.com/learnwaluigi
