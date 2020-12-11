@@ -8,8 +8,8 @@ Run `$ docker-compose build && docker-compose up`
 - [tweet-generator](https://github.com/cordx56/tweet-generator)
 
 ## Features
-- Tweets on every 30 minutes learned from home_timeline tweets.
-- Auto Reply (Deperected) uses too many RAM.
+- Learns from home_timelime and tweets every 30 minutes.
+- Auto reply (Deperected) uses too many RAM.
 
 ## Running on
 - https://twitter.com/learnshizue
