@@ -1,4 +1,4 @@
-# markov-twitter
+# Markov Chain Tweet Bot
 
 Run `$ docker-compose build && docker-compose up`
 
