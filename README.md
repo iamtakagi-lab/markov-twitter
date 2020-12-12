@@ -11,6 +11,6 @@ Run `$ docker-compose build && docker-compose up`
 - Learns from home_timelime and tweets every 30 minutes.
 - Auto reply (Deperected) uses too many RAM.
 
-## Running on
+## Examples
 - https://twitter.com/learnshizue
 - https://twitter.com/learnwaluigi
