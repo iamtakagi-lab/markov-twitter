@@ -9,7 +9,7 @@ Run `$ docker-compose build && docker-compose up`
 
 ## Features
 - Learns from home_timelime and tweets every 30 minutes.
-- Auto reply
+- Auto reply.
 
 ## Examples
 - https://twitter.com/learnshizue
