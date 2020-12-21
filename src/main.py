@@ -9,9 +9,8 @@ import urllib.parse
 import os
 import sys
 
-from flask import Flask, request, redirect, abort, jsonify
-
-from flask_apscheduler import APScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
+sched = BlockingScheduler()
 
 import datetime
 
@@ -22,10 +21,6 @@ import logging
 class Config(object):
     SCHEDULER_API_ENABLED = True
 
-
-scheduler = APScheduler()
-
-app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -44,11 +39,6 @@ mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 # Twitter
 twt = TwitterTools(
         twitterKeys["CK"], twitterKeys["CS"], twitterKeys["AT"], twitterKeys["ATS"])
-
-@app.route('/')
-def index():
-    return "Markov Twitter"
-
 
 def reply(status):
     global screen_name, twt
@@ -98,8 +88,8 @@ def reply(status):
 
 
 # TLからツイートを学習して呟きます (30分おき)
-scheduler.task('cron', id='tweet', minute='*/30')
-# @scheduler.task('interval', id='tweet', seconds=30, misfire_grace_time=900) # DEBUG
+# @ched.scheduled_job('interval', id='tweet', seconds=30, misfire_grace_time=900) # DEBUG
+@sched.scheduled_job('cron', id='tweet', minute='*/30')
 def tweet():
     global twt
 
@@ -154,12 +144,8 @@ def tweet():
 
 if __name__ == "__main__":
 
-    # Tweet Scheduler
-    scheduler.init_app(app)
-    scheduler.start()
-
     # Stremaming
     twt.startStreaming({'track':'@' + screen_name}, reply)
 
-    # Start
-    app.run(host = os.getenv('HOST', '0.0.0.0'), port = int(os.getenv('PORT', '5000')))
+    # Scheduler
+    sched.start()
