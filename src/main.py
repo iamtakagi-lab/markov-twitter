@@ -166,7 +166,7 @@ if __name__ == "__main__":
     sched.start()
 
     # Stremaming
-    # twt.startStreaming({'track':'@' + screen_name}, reply)
+    twt.startStreaming({'track':'@' + screen_name}, reply)
 
     # Start
     # app.run(host = os.getenv('HOST', '0.0.0.0'), port = int(os.getenv('PORT', '5000')))
