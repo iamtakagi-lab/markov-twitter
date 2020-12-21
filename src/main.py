@@ -102,7 +102,7 @@ def reply(status):
 # TLからツイートを学習して呟きます (30分おき)
 # @scheduler.task('cron', id='tweet', minute='*/30')
 # @scheduler.task('interval', id='tweet', seconds=30, misfire_grace_time=900) # DEBUG
-@sched.scheduled_job('cron', id='tweet', minutes='*/30')
+@sched.scheduled_job('cron', id='tweet', minute='*/30')
 def tweet():
     global twt
 
