@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # coding:utf-8
 
-from flask_apscheduler import APScheduler
 from twitterTools import TwitterTools
 import exportModel
 import MeCab
@@ -40,6 +39,7 @@ mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 twt = TwitterTools(
         twitterKeys["CK"], twitterKeys["CS"], twitterKeys["AT"], twitterKeys["ATS"])
 
+"""
 def reply(status):
     global screen_name, twt
 
@@ -85,7 +85,7 @@ def reply(status):
 
     except Exception as e:
         print(e)
-
+"""
 
 # TLからツイートを学習して呟きます (30分おき)
 # @ched.scheduled_job('interval', id='tweet', seconds=30, misfire_grace_time=900) # DEBUG
@@ -145,7 +145,7 @@ def tweet():
 if __name__ == "__main__":
 
     # Stremaming
-    twt.startStreaming({'track':'@' + screen_name}, reply)
+    # twt.startStreaming({'track':'@' + screen_name}, reply)
 
     # Scheduler
     sched.start()
