@@ -39,7 +39,7 @@ mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 twt = TwitterTools(
         twitterKeys["CK"], twitterKeys["CS"], twitterKeys["AT"], twitterKeys["ATS"])
 
-"""
+"""        
 def reply(status):
     global screen_name, twt
 
