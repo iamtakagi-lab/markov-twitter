@@ -10,7 +10,6 @@ import markovify
 
 mecabW = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 
-
 def filterTweets(twts):
     replyMatch = re.compile(r"@\w+")
     urlMatch = re.compile(r"https?://")

@@ -2,8 +2,6 @@
 # coding:utf-8
 
 import json
-import threading
-import schedule
 import time
 from requests_oauthlib import OAuth1Session
 import os
@@ -11,23 +9,21 @@ import markovify
 import MeCab
 import exportModel
 
+from tweepy import OAuthHandler, Stream, StreamListener
+
 # MeCab
 mec = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -O wakati")
 
-
 class Twitter:
     oauth = None
-
+    tweepy_oauth: OAuthHandler
     screen_name = None
-
-    last_time = 0
-    re_t_network = 16
-    re_t_http = 5
-    re_t_420 = 60
 
     def __init__(self, screen_name, ck, cs, at=None, ats=None, callback=None):
         self.screen_name = screen_name
         self.oauth = OAuth1Session(ck, cs, at, ats, callback)
+        self.tweepy_oauth = OAuthHandler(ck, cs)
+        self.tweepy_oauth.set_access_token(at, ats)
 
     def requestToken(self):
         url = "https://api.twitter.com/oauth/request_token"
@@ -119,9 +115,20 @@ class Twitter:
         except Exception as e:
             print(e)
 
-    def reply(self, status):
+# Tweepy
 
-        user_screen_name = status["user"]["screen_name"]
+    def stream(self):
+        l = StdOutListener()
+        stream = Stream(self.tweepy_oauth, l)
+        stream.filter(track=[f'@{self.screen_name}'])
+
+class StdOutListener(StreamListener):
+    """ A listener handles tweets that are received from the stream.
+    This is a basic listener that just prints received tweets to stdout.
+    """
+    def reply(self, stauts):
+
+        user_screen_name = stauts["user"]["screen_name"]
 
         # 自身のツイートには反応しない
         if user_screen_name == self.screen_name:
@@ -155,8 +162,8 @@ class Twitter:
                     sentence = "".join(sentence.split())
 
                 params = {
-                    "status": "@" + user_screen_name + " " + sentence,
-                    "in_reply_to_status_id": status["id_str"],
+                    "status": "@" + user_screen_name + ' ' + sentence,
+                    "in_reply_to_status_id": stauts["id_str"],
                 }
 
                 # 返信
@@ -165,76 +172,14 @@ class Twitter:
         except Exception as e:
             print(e)
 
-    def __reset_backoff_time(self):
-        self.re_t_network = 16
-        self.re_t_http = 5
-        self.re_t_420 = 60
+    def on_status(self, stauts):
+        self.reply(stauts)
+        return True
 
-    def stream(self):
-        params = {'track': '@' + self.screen_name}
+    def on_error(self, status):
+        print(status)
 
-        while True:
-            try:
-                # リクエストを送る
-                req = self.oauth.post('https://stream.twitter.com/1.1/statuses/filter.json',
-                                      params=params,
-                                      stream=True)
-
-                req.encoding = 'utf-8'
-
-                # リクエストのステータスコードを確認
-                if req.status_code == 200:
-                    self.__reset_backoff_time()
-
-                    # 関数呼び出し
-                    for line in req.iter_lines(decode_unicode=True):
-                        self.last_time = time.time()
-                        if line:
-                            # 取得したJsonデータ(バイト列)を辞書形式に変換
-                            self.reply(json.loads(line))
-
-                    # 90秒間受信データがない場合、whileを抜け再接続
-                    while time.time() - self.last_time < 90:
-                        time.sleep(90 - (time.time() - self.last_time))
-
-                elif req.status_code == 401:
-                    raise TwitterAPIError('404 : Unauthorized')
-                elif req.status_code == 403:
-                    raise TwitterAPIError('403 : Forbidden')
-                elif req.status_code == 406:
-                    raise TwitterAPIError('406 : Not Acceptable')
-                elif req.status_code == 413:
-                    raise TwitterAPIError('413 : Too Long')
-                elif req.status_code == 416:
-                    raise TwitterAPIError('416 : Range Unacceptable')
-                elif req.status_code == 420:
-                    # 420エラーの場合、待機時間を2倍に伸ばす(制限なし)
-                    print(
-                        f'420 : Rate Limited. Recconecting... wait {self.re_t_420}s')
-                    time.sleep(self.re_t_http)
-                    self.re_t_http *= 2
-                elif req.status_code == 503:
-                    # 再接続が必要なHTTPエラーの場合、待機時間を2倍に伸ばす(最大320秒)
-                    print(
-                        f'503 : Service Unavailable. Reconnecting... wait {self.re_t_http}s')
-                    time.sleep(self.re_t_http)
-                    self.re_t_http *= 2
-                    if self.re_t_http > 320:
-                        raise TwitterAPIError('503 : Service Unavailable.')
-
-                else:
-                    raise TwitterAPIError(f'HTTP ERRORE : {req.status_code}')
-
-            except KeyboardInterrupt:  # Ctrl + C で強制終了できる
-                break
-            except ConnectionError:
-                time.sleep(self.re_t_network)
-                self.re_t_network += 16
-                if self.re_t_network > 250:
-                    raise TwitterAPIError('Network Error')
-            except:
-                raise
-
+# Error
 class TwitterAPIError(Exception):
     def __init__(self, req):
         self.req = req
