@@ -126,9 +126,9 @@ class StdOutListener(StreamListener):
     """ A listener handles tweets that are received from the stream.
     This is a basic listener that just prints received tweets to stdout.
     """
-    def reply(self, stauts):
+    def reply(self, status):
 
-        user_screen_name = stauts["user"]["screen_name"]
+        user_screen_name = status["user"]["screen_name"]
 
         # 自身のツイートには反応しない
         if user_screen_name == self.screen_name:
@@ -163,7 +163,7 @@ class StdOutListener(StreamListener):
 
                 params = {
                     "status": "@" + user_screen_name + ' ' + sentence,
-                    "in_reply_to_status_id": stauts["id_str"],
+                    "in_reply_to_status_id": status["id_str"],
                 }
 
                 # 返信
@@ -172,8 +172,8 @@ class StdOutListener(StreamListener):
         except Exception as e:
             print(e)
 
-    def on_status(self, stauts):
-        self.reply(stauts)
+    def on_status(self, status):
+        self.reply(status)
         return True
 
     def on_error(self, status):
