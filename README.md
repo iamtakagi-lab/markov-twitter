@@ -8,8 +8,7 @@ Run `$ docker-compose build && docker-compose up`
 - Based [tweet-generator](https://github.com/cordx56/tweet-generator)
 
 ## Features
-- Learns from home_timelime and tweets every 30 minutes.
-- Auto reply. (Deperected)
+- Learn from home_timelime and tweets every 30 minutes.
 
 ## Examples
 - https://twitter.com/learnshizue
